@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="东盟批量采购询价与议价实训教师后台。">
+  <title>教师后台 | 东盟批量采购实训</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="admin-page">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">CS</div>
+      <div class="brand-text">
+        <strong>东盟批量采购询价与议价</strong>
+        <span>教师后台 · 会话记录与风险标记</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="ghost" href="/" target="_blank" rel="noopener">打开学生端</a>
+      <button id="logoutBtn" class="ghost danger hidden" type="button">退出</button>
+    </div>
+  </header>
+
+  <main class="admin-wrap">
+    <section id="loginView" class="admin-login hidden">
+      <div class="eyebrow">TEACHER CONSOLE</div>
+      <h2>教师后台登录</h2>
+      <p>请输入部署时设置的 <code>ADMIN_TOKEN</code>。如果未设置，服务启动日志中会打印本次随机口令。</p>
+      <form id="loginForm">
+        <input id="tokenInput" type="password" placeholder="Admin token" autocomplete="current-password">
+        <button class="primary wide" type="submit">进入后台</button>
+        <p class="form-error hidden" id="loginError"></p>
+      </form>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div class="admin-head">
+        <div>
+          <div class="eyebrow">TEACHER CONSOLE</div>
+          <h1>实训会话总览</h1>
+          <p>每 20 秒自动刷新。点击“查看”可回放完整对话、查看风险标记与系统预估分。</p>
+        </div>
+        <div class="admin-token">
+          <input id="adminTokenInput" type="password" placeholder="Admin token" autocomplete="current-password">
+          <button id="refreshBtn" class="ghost" type="button">刷新</button>
+        </div>
+      </div>
+
+      <div class="admin-stats">
+        <div class="admin-stat"><span>会话总数</span><strong id="statTotal">0</strong></div>
+        <div class="admin-stat"><span>已结束</span><strong id="statEnded">0</strong></div>
+        <div class="admin-stat"><span>含风险标记</span><strong id="statRisk">0</strong></div>
+        <div class="admin-stat"><span>平均预估分</span><strong id="statScore">—</strong></div>
+      </div>
+
+      <div class="admin-toolbar">
+        <h2>会话记录</h2>
+        <div class="toolbar-actions">
+          <a id="exportAll" class="ghost" href="#" download>导出汇总 CSV</a>
+          <span class="muted" id="lastRefresh">—</span>
+        </div>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>学生</th>
+              <th>开始时间</th>
+              <th>轮次</th>
+              <th>状态</th>
+              <th>预估</th>
+              <th>风险 / 标记</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="sessionRows"></tbody>
+        </table>
+        <div id="emptyState" class="admin-empty hidden">还没有会话。请先让学生端开始实训。</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="drawer" class="admin-drawer hidden">
+    <div class="admin-drawer-card">
+      <div class="admin-drawer-head">
+        <div>
+          <h3 id="drawerTitle">会话详情</h3>
+          <p id="drawerMeta">—</p>
+        </div>
+        <button id="closeDrawer" class="ghost" type="button">关闭</button>
+      </div>
+      <div class="admin-drawer-body">
+        <div id="drawerFlags" class="admin-drawer-flags"></div>
+        <div id="drawerMetrics" class="admin-stats drawer-metrics"></div>
+        <div id="drawerTranscript" class="admin-transcript"></div>
+      </div>
+      <div class="admin-drawer-foot">
+        <span class="muted" id="drawerNote">—</span>
+        <a id="drawerCsv" class="ghost" href="#" download>导出 CSV</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminToast" class="toast hidden" role="status"></div>
+  <script src="/admin.js"></script>
+</body>
+</html>
