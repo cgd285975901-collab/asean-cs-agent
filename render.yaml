@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: asean-cs-agent
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: CLASS_CODE
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false
