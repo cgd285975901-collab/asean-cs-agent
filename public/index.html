@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="面向东盟跨境电商的智能客服售前实训：批量采购询价与议价。">
+  <title>东盟批量采购询价与议价 | 智能客服实训</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar" id="topbar">
+      <div class="brand">
+        <div class="brand-mark">CS</div>
+        <div class="brand-text">
+          <strong>东盟批量采购询价与议价</strong>
+          <span>跨境电商客服 · 售前实训</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span id="embedBadge" class="badge hidden">嵌入模式</span>
+        <button id="btnHelp" class="ghost" type="button">任务说明</button>
+      </div>
+    </header>
+
+    <main id="startScreen" class="start-screen">
+      <section class="start-hero">
+        <div class="eyebrow">INTELLIGENT CUSTOMER SERVICE LAB</div>
+        <h1>一条 20,000 只的询盘，<br><span>你能守住多少？</span></h1>
+        <p class="lede">
+          你将用英文接待印尼雅加达的批发商 Rizky。他会问价、压价、要样品、要账期，
+          也会试探你的底线。20 分钟，从询盘推进到 PI。
+        </p>
+        <div class="hero-chips">
+          <span>网页智能体</span>
+          <span>英文对练</span>
+          <span>全程留痕</span>
+          <span>自动预警</span>
+        </div>
+        <div class="hero-steps">
+          <div><b>01</b><span>读任务卡<br>准备报价</span></div>
+          <div><b>02</b><span>英文对练<br>应对压价</span></div>
+          <div><b>03</b><span>提交记录<br>复盘改进</span></div>
+        </div>
+      </section>
+
+      <section class="start-card">
+        <div class="card-topline"></div>
+        <h2>开始实训</h2>
+        <p class="muted">请填写真实姓名，便于教师查看你的对话记录。</p>
+        <form id="startForm" autocomplete="off">
+          <label class="field">
+            <span>姓名 <i>*</i></span>
+            <input id="nameInput" name="name" maxlength="40" required placeholder="例如：李明">
+          </label>
+          <label class="field">
+            <span>班级</span>
+            <input id="classInput" name="className" maxlength="40" placeholder="例如：24 跨境电商 1 班">
+          </label>
+          <label class="field">
+            <span>学号</span>
+            <input id="studentIdInput" name="studentId" maxlength="30" placeholder="用于教师核对（仅存哈希）">
+          </label>
+          <label class="field hidden" id="codeField">
+            <span>班级访问码 <i>*</i></span>
+            <input id="codeInput" name="code" maxlength="40" placeholder="请输入教师提供的访问码">
+          </label>
+          <button id="startBtn" class="primary wide" type="submit">
+            <span>进入对话</span><span aria-hidden="true">→</span>
+          </button>
+          <p class="form-error hidden" id="startError"></p>
+        </form>
+        <div class="privacy-note">
+          本会话仅用于教学评估。请勿输入真实手机号、邮箱、银行卡号等个人信息。
+        </div>
+      </section>
+
+      <section class="start-foot">
+        <div>
+          <b>你会遇到</b>
+          <span>USD 2.20 的开盘价 · 2.35 CIF 的竞品报价 · 免运费 / 60 天账期 / 私账试探</span>
+        </div>
+        <div>
+          <b>系统会记录</b>
+          <span>每一轮对话、报价快照、风险标记与响应时间，教师可回放与导出。</span>
+        </div>
+      </section>
+    </main>
+
+    <main id="chatScreen" class="chat-screen hidden">
+      <aside class="sidebar" id="sidebar">
+        <div class="side-card">
+          <div class="side-label">YOUR TASK</div>
+          <h3>把意向推进到 PI</h3>
+          <p class="small">20 分钟内完成接待、报价、议价，并推进样品或 PI。</p>
+          <div class="meta-row"><span>买家</span><strong>Rizky · 雅加达</strong></div>
+          <div class="meta-row"><span>数量</span><strong>20,000 只 · 6 色</strong></div>
+          <div class="meta-row"><span>目标价</span><strong>USD 2.20 / pc</strong></div>
+          <div class="meta-row"><span>竞品</span><strong>2.35 CIF（201 钢）</strong></div>
+        </div>
+
+        <div class="side-card">
+          <div class="side-label">QUOTE CHECK</div>
+          <h3>报价 8 要素</h3>
+          <ul id="quoteChecklist" class="checklist">
+            <li data-field="product"><span class="dot"></span>产品 / 规格</li>
+            <li data-field="price"><span class="dot"></span>单价</li>
+            <li data-field="incoterm"><span class="dot"></span>贸易术语</li>
+            <li data-field="currency"><span class="dot"></span>币种</li>
+            <li data-field="moq"><span class="dot"></span>MOQ</li>
+            <li data-field="lead"><span class="dot"></span>交期</li>
+            <li data-field="payment"><span class="dot"></span>付款方式</li>
+            <li data-field="validity"><span class="dot"></span>有效期</li>
+          </ul>
+          <div class="progress"><span id="quoteProgress"></span></div>
+          <p class="tiny" id="quoteMissing">还缺：单价、术语、币种、MOQ、交期、付款、有效期</p>
+        </div>
+
+        <div class="side-card">
+          <div class="side-label">QUICK CALC</div>
+          <h3>报价计算器</h3>
+          <div class="calc-grid">
+            <label>数量<input id="calcQty" type="number" min="1000" step="500" value="20000"></label>
+            <label>单价 USD<input id="calcPrice" type="number" min="0.5" step="0.01" value="2.68"></label>
+          </div>
+          <label class="select-label">贸易术语
+            <select id="calcIncoterm">
+              <option value="FOB">FOB Ningbo</option>
+              <option value="CIF">CIF Jakarta (+0.18)</option>
+            </select>
+          </label>
+          <div class="calc-row"><span>预估总价</span><strong id="calcTotal">USD 53,600.00</strong></div>
+          <button id="insertQuoteBtn" class="small" type="button">插入报价到输入框</button>
+        </div>
+      </aside>
+
+      <section class="chat-panel">
+        <div class="chat-head">
+          <div class="buyer">
+            <div class="avatar">R</div>
+            <div>
+              <strong>Rizky Pratama</strong>
+              <span>CV Sinar Jaya Grosir · Jakarta</span>
+            </div>
+            <span class="online-dot" title="在线"></span>
+          </div>
+          <div class="chat-stats">
+            <div class="stat"><span>剩余时间</span><strong id="timer">20:00</strong></div>
+            <div class="stat"><span>轮次</span><strong id="turnCount">0</strong></div>
+            <button id="mobileSidebarBtn" class="ghost mobile-only" type="button">任务卡</button>
+            <button id="endBtn" class="ghost danger" type="button">结束并提交</button>
+          </div>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <div class="composer">
+          <div class="composer-hint" id="composerHint">用英文回复。Enter 发送，Shift + Enter 换行。</div>
+          <div class="composer-row">
+            <textarea id="messageInput" rows="2" maxlength="2000" placeholder="Type your reply in English..." aria-label="输入英文回复"></textarea>
+            <button id="sendBtn" class="primary send" type="button">发送</button>
+          </div>
+          <div class="composer-foot">
+            <span id="statusText">已连接</span>
+            <span>系统会自动保存全部对话记录</span>
+          </div>
+        </div>
+      </section>
+      <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+    </main>
+
+    <div id="helpModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="modal-card">
+        <button class="modal-close" id="closeHelp" type="button" aria-label="关闭">×</button>
+        <div class="eyebrow">TASK BRIEF</div>
+        <h2 id="helpTitle">任务说明</h2>
+        <div class="help-grid">
+          <div>
+            <h4>你的角色</h4>
+            <p>义乌优品家居跨境客服。用英文接待印尼批发商 Rizky，完成 20,000 只 YP-800 饭盒的询价、报价、议价与下一步推进。</p>
+          </div>
+          <div>
+            <h4>你必须做到</h4>
+            <p>问清至少 5 个关键信息；发出 8 要素齐全的报价；至少 3 次有条件让步；不越权、不虚假、不私账；推进到样品或 PI。</p>
+          </div>
+          <div>
+            <h4>三条红线</h4>
+            <p>低于底价不擅自承诺；不承诺免运费 / 包税 / 60 天账期；没有 SNI 就说没有，只走公司账户。</p>
+          </div>
+          <div>
+            <h4>时间与记录</h4>
+            <p>20 分钟或 30 轮自动结束；系统逐轮记录，教师可回放、导出 CSV。请勿输入真实个人信息。</p>
+          </div>
+        </div>
+        <div class="help-actions">
+          <button id="helpStart" class="primary" type="button">开始 / 继续</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="summaryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="summaryTitle">
+      <div class="modal-card summary-card">
+        <div class="eyebrow">SESSION SUBMITTED</div>
+        <h2 id="summaryTitle">本轮实训已提交</h2>
+        <p class="muted" id="summaryLead">教师可以在后台查看完整对话、风险标记与系统预估分。</p>
+        <div class="summary-grid">
+          <div><span>对话轮次</span><strong id="sumTurns">—</strong></div>
+          <div><span>报价完整度</span><strong id="sumQuote">—</strong></div>
+          <div><span>系统预估</span><strong id="sumScore">—</strong></div>
+          <div><span>风险标记</span><strong id="sumFlags">—</strong></div>
+        </div>
+        <div class="summary-next" id="sumNext">下一步：等待教师复盘。</div>
+        <div class="help-actions">
+          <a id="downloadLink" class="ghost link-button" href="#" download>导出对话 CSV</a>
+          <button id="closeSummary" class="primary" type="button">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden" role="status"></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
