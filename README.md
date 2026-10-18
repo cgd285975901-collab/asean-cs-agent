@@ -48,7 +48,21 @@ PORT=8792 ADMIN_TOKEN='change-me-please' CLASS_CODE='ASEAN2026' node server.js
 
 ## 部署成独立网址
 
-### 方案 A：Render（最快，自动 HTTPS）
+### 一键部署到 Render（推荐）
+
+代码已上传到公开仓库：
+
+<https://github.com/cgd285975901-collab/asean-cs-agent>
+
+直接打开下面的 Blueprint 部署链接：
+
+<https://render.com/deploy?repo=https://github.com/cgd285975901-collab/asean-cs-agent>
+
+登录 Render（可直接用 GitHub 登录）→ 设置 `CLASS_CODE`（如 `ASEAN2026`）→ 点击 Deploy。部署完成后会得到 `https://xxxx.onrender.com` 的独立 HTTPS 网址。
+
+> 免费实例会休眠、磁盘不持久，适合课堂演示；下课前请导出 CSV。长期使用请升级实例并挂载持久磁盘。
+
+### 方案 A：Render 手动配置（自动 HTTPS）
 
 1. 把 `webapp` 目录推到 GitHub/GitLab。
 2. 在 Render 新建 Blueprint，选择仓库；仓库根目录的 `render.yaml` 会创建 Web Service。
