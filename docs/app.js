@@ -84,8 +84,15 @@ function init() {
   bindEvents();
   detectEmbed();
   els.codeField.classList.add('hidden');
-  const savedName = localStorage.getItem('asean.name') || '';
-  const savedClass = localStorage.getItem('asean.class') || '';
+  let savedName = '';
+  let savedClass = '';
+  try {
+    savedName = localStorage.getItem('asean.name') || '';
+    savedClass = localStorage.getItem('asean.class') || '';
+  } catch {
+    // file:// or strict privacy mode may block localStorage; the page still works,
+    // but the student must export the CSV before closing.
+  }
   if (savedName) els.nameInput.value = savedName;
   if (savedClass) els.classInput.value = savedClass;
 
@@ -199,8 +206,12 @@ function createSession() {
   };
   state = st;
   ended = false;
-  localStorage.setItem('asean.name', name);
-  localStorage.setItem('asean.class', className);
+  try {
+    localStorage.setItem('asean.name', name);
+    localStorage.setItem('asean.class', className);
+  } catch {
+    // ignore: export still works even if persistence is blocked
+  }
   saveRecord();
   clearMessages();
   appendSystem('实训开始 · 20 分钟 · 请用英文完成接待与报价');
@@ -235,9 +246,13 @@ function resumeSession(id) {
 }
 
 function setUrlSession(id) {
-  const url = new URL(location.href);
-  url.searchParams.set('session', id);
-  history.replaceState(null, '', url.toString());
+  try {
+    const url = new URL(location.href);
+    url.searchParams.set('session', id);
+    history.replaceState(null, '', url.toString());
+  } catch {
+    // file:// history updates can be blocked; the session is still saved locally.
+  }
 }
 
 function startTimerFromMeta(meta) {
@@ -284,7 +299,8 @@ function updateUI(st) {
     if (isDone) done.push(field);
   });
   els.quoteProgress.style.width = `${Math.round((done.length / QUOTE_FIELDS.length) * 100)}%`;
-  const missing = (q.missing || []).map((m) => MISSING_LABELS[m] || m);
+  const rawMissing = ENGINE.missingFields ? ENGINE.missingFields(st) : (q.missing || []);
+  const missing = rawMissing.map((m) => MISSING_LABELS[m] || m);
   els.quoteMissing.textContent = missing.length
     ? `还缺：${missing.join('、')}`
     : '8 项已齐全。记得用英文复述并推进样品 / PI。';
@@ -552,7 +568,7 @@ function saveRecord() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
   } catch (err) {
-    showToast('本机存储空间不足，请先导出 CSV。');
+    showToast('浏览器未允许本地存储，请及时点“导出”保存 CSV。');
     console.error(err);
   }
 }
